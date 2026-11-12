@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
-using static galina_bot.galina_hotkey;
+using static KeyboardHook;
 using static galina_bot.WhisperVoiceProcessing;
 namespace galina_bot
 {
@@ -17,19 +17,14 @@ namespace galina_bot
             var voiceProcessing = new WhisperVoiceProcessing();
             await voiceProcessing.InitializeModel();
 
-            using (var hotKeyWindow = new HotKeyWindow()) //Проверка условий и запуск проверки хоткея
+            using (var keyboardHook = new KeyboardHook())
             {
-                if (!hotKeyWindow.Register()) //В случае, если хоткей будет занят системно - выйдет ошибка
-                {
-                    Console.WriteLine("> Невозможно зарегистрировать горячую клавишу");
-                    return;
-                }
-
-                while (true) //Вечный цикл опроса 
-                {
-                    Application.DoEvents();
-                    Thread.Sleep(500);
-                }
+                Console.WriteLine("Хук установлен");
+                Console.WriteLine("\r\n Галя приветствует вас");
+                Console.WriteLine("Для ввода команды зажмите Ctrl + Alt и зажмите - (Минус)");
+                Console.WriteLine("После произнесения команды отожмите - (Минус)");
+                
+                Application.Run();
             }
         }
     }
