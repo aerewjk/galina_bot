@@ -15,15 +15,21 @@ namespace galina_bot
             if (!File.Exists(modelFileName)) //Если файл с моделью не обнаружен
             {
                 Console.WriteLine("Файл модели не был обнаружен. Скачивание модели Base, подождите, пожалуйста!");
-                Task<string> task = ModelDownloadAsync();
-                string result_download = await task;
-                Console.WriteLine(result_download);
+
+                Task<string> task = ModelDownloadAsync(); //Назначение таски
+                string result_download = await task; //Запуск и ожидание
+                Console.WriteLine(result_download); //После завершения - вывод в консоль
 
             }
             else { Console.WriteLine("Файл модели был обнаружен -> Скачивание не требуется"); }
-        }
 
-        static async Task<string> ModelDownloadAsync()
+            using var whisperFactory = WhisperFactory.FromPath(modelFileName); //Инициализирует фабрику - она выделяет память под модель
+
+            using var processor = whisperFactory.CreateBuilder() //Инициализирует процессор - он хранит настройки сеанса, а также передает данные на расшифровку моделью
+                .WithLanguage("ru")
+                .Build();
+        }
+        static async Task<string> ModelDownloadAsync() //Асинхронная таска для скачивания модели
         {
             using var modelStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(GgmlType.Base); //Скачивает файл модели
             using var fileWriter = File.OpenWrite(modelFileName); //Называет его согласно указанному названию
@@ -31,5 +37,6 @@ namespace galina_bot
             return "Скачивание модели завершено";
         }
 
+        
     }
 }
