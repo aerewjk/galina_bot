@@ -4,36 +4,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace galina_bot
-{
-    internal class SoundRecording
+using Whisper.net;
+    public class SoundRecording
     {
-        private WasapiRecorder _recorder;
-        private WaveFileWriter _writer;
+        private WasapiRecorder? _recorder;
+        private WaveFileWriter? _writer;
         private string _tempFilePath = "temp_voice.wav";
 
-        private void StartRecording()
+        public void StartRecording()
     {
-        // Создаем рекордер с нужным форматом для Whisper (16kHz, моно)
-        // Если не указать WithFormat, будет использован формат микшера устройства (обычно 32-bit float)
+        //Создание рекордера с указанием нужного формата записи
         _recorder = new WasapiRecorderBuilder()
             .WithFormat(new WaveFormat(16000, 1))
             .Build();
 
         _writer = new WaveFileWriter(_tempFilePath, _recorder.WaveFormat);
 
-        // Подписываемся на событие. Span валиден только внутри этого колбэка!
+        //Подписка на событие
         _recorder.DataAvailable += (buffer, flags, devicePosition, qpcPosition) =>
         {
             _writer.Write(buffer);
         };
 
         _recorder.StartRecording();
-        Console.WriteLine("🎤 Начало записи (WasapiRecorder)...");
     }
 
-    private void StopRecordingAndProcess()
+    public async Task StopRecordingAndProcess()
     {
         if (_recorder != null)
         {
@@ -49,8 +45,9 @@ namespace galina_bot
         }
 
         Console.WriteLine("Запись завершена, отправка в Whisper.");
-
     }
+
+    public string GetTempFilePath() => _tempFilePath;
 }
-}
+
 

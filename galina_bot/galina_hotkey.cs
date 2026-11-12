@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-
 public class KeyboardHook : IDisposable
 {
+    public event Action? OnHotKeyPressed;
+    public event Action? OnHotKeyReleased;
+
     private const int WH_KEYBOARD_LL = 13;
     private const int WM_KEYDOWN = 0x0100;
     private const int WM_KEYUP = 0x0101;
@@ -42,7 +44,7 @@ public class KeyboardHook : IDisposable
     {
         // Получаем дескриптор текущего модуля для хука
         using (Process curProcess = Process.GetCurrentProcess())
-        using (ProcessModule curModule = curProcess.MainModule)
+        using (ProcessModule? curModule = curProcess.MainModule)
         {
             return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
         }
@@ -66,12 +68,13 @@ public class KeyboardHook : IDisposable
                     {
                         Console.WriteLine("Начинаю запись");
                         _isRecording = true;
-
+                        OnHotKeyPressed.Invoke();
                     }
                     else if (wParam == (IntPtr)WM_KEYUP)
                     {
                         Console.WriteLine("Завершаю запись");
                         _isRecording = false;
+                        OnHotKeyReleased.Invoke();
                     }
                 }
             }
