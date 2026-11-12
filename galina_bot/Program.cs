@@ -9,18 +9,19 @@ namespace galina_bot
     {
         static void Main(string[] args)
         {
+            //Косметика для консоли
             Console.WriteLine("Галя на связи!");
             Console.WriteLine("Для того, чтобы запустить запись команды для Гали зажмите и произнесите команду с зажатым сочетанием клавиш crtl + alt + - (минус) ");
 
-            using (var hotKeyWindow = new HotKeyWindow())
+            using (var hotKeyWindow = new HotKeyWindow()) //Проверка условий и запуск проверки хоткея
             {
-                if (!hotKeyWindow.Register())
+                if (!hotKeyWindow.Register()) //В случае, если хоткей будет занят системно - выйдет ошибка
                 {
                     Console.WriteLine("> Невозможно зарегистрировать горячую клавишу");
                     return;
                 }
 
-                while (true)
+                while (true) //Вечный цикл опроса 
                 {
                     Application.DoEvents();
                     Thread.Sleep(500);
