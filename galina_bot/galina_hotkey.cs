@@ -18,14 +18,14 @@ namespace galina_bot
 
             //Импорт функций WinAPI
             [DllImport("user32.dll")]
-            private static extern bool RegisterHotKey(IntPtr hWndз, int id, uint fsModifiers, uint vk);
+            private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 
             [DllImport("user32.dll")]
             private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
             //Модификаторы (Хоткей ctrl + alt + -)
             private const uint VK_OEM_MINUS = 0xBD; //Код клавиши -
-            private const uint MOD_CONTROL = 0x0004; //Код клавиши Ctrl
+            private const uint MOD_CONTROL = 0x0002; //Код клавиши Ctrl
             private const uint MOD_ALT = 0x0001; //Код клавиши Alt
             private const uint MOD_NOREPEAT = 0x4000; //Модификатор, чтобы при зажатой комбинации не повторялось миллион раз
 
