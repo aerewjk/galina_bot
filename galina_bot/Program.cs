@@ -3,15 +3,19 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
 using static galina_bot.galina_hotkey;
+using static galina_bot.WhisperVoiceProcessing;
 namespace galina_bot
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             //Косметика для консоли
             Console.WriteLine("Галя на связи!");
             Console.WriteLine("Для того, чтобы запустить запись команды для Гали зажмите и произнесите команду с зажатым сочетанием клавиш crtl + alt + - (минус) ");
+
+            var voiceProcessing = new WhisperVoiceProcessing();
+            await voiceProcessing.InitializeModel();
 
             using (var hotKeyWindow = new HotKeyWindow()) //Проверка условий и запуск проверки хоткея
             {
