@@ -1,0 +1,14 @@
+C:\git_repos\galina_bot\galina_bot\galina_bot\bin\Debug\net9.0-windows8.0\galina_bot.exe
+C:\git_repos\galina_bot\galina_bot\galina_bot\bin\Debug\net9.0-windows8.0\galina_bot.deps.json
+C:\git_repos\galina_bot\galina_bot\galina_bot\bin\Debug\net9.0-windows8.0\galina_bot.runtimeconfig.json
+C:\git_repos\galina_bot\galina_bot\galina_bot\bin\Debug\net9.0-windows8.0\galina_bot.dll
+C:\git_repos\galina_bot\galina_bot\galina_bot\bin\Debug\net9.0-windows8.0\galina_bot.pdb
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.GeneratedMSBuildEditorConfig.editorconfig
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.AssemblyInfoInputs.cache
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.AssemblyInfo.cs
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.csproj.CoreCompileInputs.cache
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.dll
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\refint\galina_bot.dll
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.pdb
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.genruntimeconfig.cache
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\ref\galina_bot.dll
