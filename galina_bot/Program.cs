@@ -10,21 +10,42 @@ namespace galina_bot
     {
         static async Task Main(string[] args)
         {
-            //Косметика для консоли
-            Console.WriteLine("Галя на связи!");
-            Console.WriteLine("Для того, чтобы запустить запись команды для Гали зажмите и произнесите команду с зажатым сочетанием клавиш crtl + alt + - (минус) ");
-
+            var soundRecorder = new SoundRecording(); //Сервис записи звука
+            
+            //Скачивание модели, если ее нет
             var voiceProcessing = new WhisperVoiceProcessing();
             await voiceProcessing.InitializeModel();
 
-            using (var keyboardHook = new KeyboardHook())
+            
+            using (var keyboardHook = new KeyboardHook()) //Запуск хука
             {
+                keyboardHook.OnHotKeyPressed += () =>
+                {
+                    soundRecorder.StartRecording();
+                };
+
+                keyboardHook.OnHotKeyReleased += () =>
+                {
+                    Task.Run(async () =>
+                    {
+                        soundRecorder.StopRecordingAndProcess();
+
+                        string filePath = soundRecorder.GetTempFilePath();
+
+                        string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath);
+
+                        Console.WriteLine(recognizedText);
+                    });
+                };
+
+
+
                 Console.WriteLine("Хук установлен");
                 Console.WriteLine("\r\n Галя приветствует вас");
                 Console.WriteLine("Для ввода команды зажмите Ctrl + Alt и зажмите - (Минус)");
                 Console.WriteLine("После произнесения команды отожмите - (Минус)");
                 
-                Application.Run();
+                Application.Run(); //Поддержание программы
             }
         }
     }
