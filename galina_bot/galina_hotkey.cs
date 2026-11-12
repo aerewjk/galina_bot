@@ -1,60 +1,91 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using System.Security.Policy;
 
-namespace galina_bot
+public class KeyboardHook : IDisposable
 {
-    internal static class galina_hotkey
+    private const int WH_KEYBOARD_LL = 13;
+    private const int WM_KEYDOWN = 0x0100;
+    private const int WM_KEYUP = 0x0101;
+    private bool _isRecording = false; 
+    // Делегат для коллбэка
+    private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+    // Импорт функций WinAPI
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    private static extern IntPtr GetModuleHandle(string lpModuleName);
+
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
+
+    private IntPtr _hookId = IntPtr.Zero;
+    private LowLevelKeyboardProc _proc;
+
+    public KeyboardHook()
     {
-        public class HotKeyWindow : NativeWindow, IDisposable
+        _proc = HookCallback;
+        // Устанавливаем хук при создании объекта
+        _hookId = SetHook(_proc);
+    }
+
+    private IntPtr SetHook(LowLevelKeyboardProc proc)
+    {
+        // Получаем дескриптор текущего модуля для хука
+        using (Process curProcess = Process.GetCurrentProcess())
+        using (ProcessModule curModule = curProcess.MainModule)
         {
-            private const int WM_HOTKEY = 0x0312;
-            private const int HOTKEY_ID = 9000;
+            return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+        }
+    }
 
-            //Импорт функций WinAPI
-            [DllImport("user32.dll")]
-            private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-            [DllImport("user32.dll")]
-            private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+    private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    {
+        if (nCode >= 0)
+        {
+            int vkCode = Marshal.ReadInt32(lParam);
 
-            //Модификаторы (Хоткей ctrl + alt + -)
-            private const uint VK_OEM_MINUS = 0xBD; //Код клавиши -
-            private const uint MOD_CONTROL = 0x0002; //Код клавиши Ctrl
-            private const uint MOD_ALT = 0x0001; //Код клавиши Alt
-            private const uint MOD_NOREPEAT = 0x4000; //Модификатор, чтобы при зажатой комбинации не повторялось миллион раз
-
-            public HotKeyWindow() //Здесь создается невидимое окно, которое будет слушать хоткей
+            // Проверяем клавишу "-" (VK_OEM_MINUS = 0xBD)
+            if (vkCode == 0xBD)
             {
-                Console.WriteLine("Создано окно");
-                CreateHandle(new CreateParams()); //Задание параметров (никакие - т.е. оно невидимо)
-            }
+                bool isCtrlDown = (GetAsyncKeyState(0x11) & 0x8000) != 0;
+                bool isAltDown = (GetAsyncKeyState(0x12) & 0x8000) != 0;
 
-            public bool Register() //Регистратору передаются коды клавиш и модификатор NOREPEAT
-            {
-                Console.WriteLine("Хоткей зарегистрирован");
-                return RegisterHotKey(this.Handle, HOTKEY_ID, MOD_CONTROL | MOD_ALT | MOD_NOREPEAT, VK_OEM_MINUS);
-            }
-
-            protected override void WndProc(ref Message m) //Процесс, замечающий хоткей
-            {
-                if (m.Msg == WM_HOTKEY && m.WParam.ToInt32() == HOTKEY_ID) //Это условие срабатывает при хоткее
+                if (isCtrlDown && isAltDown)
                 {
-                    Console.WriteLine("Хоткей нажат");
+                    if (wParam == (IntPtr)WM_KEYDOWN && _isRecording == false)
+                    {
+                        Console.WriteLine("Начинаю запись");
+                        _isRecording = true;
+
+                    }
+                    else if (wParam == (IntPtr)WM_KEYUP)
+                    {
+                        Console.WriteLine("Завершаю запись");
+                        _isRecording = false;
+                    }
                 }
-
-                base.WndProc(ref m);
-            }
-
-            public void Dispose() //Сборщик мусора после закрытия бота
-            {
-                UnregisterHotKey(this.Handle, HOTKEY_ID);
-                DestroyHandle();
             }
         }
-    } 
+        return CallNextHookEx(_hookId, nCode, wParam, lParam);
+    }
+
+    // Реализация IDisposable для снятия хука
+    public void Dispose()
+    {
+        if (_hookId != IntPtr.Zero)
+        {
+            UnhookWindowsHookEx(_hookId);
+            _hookId = IntPtr.Zero;
+        }
+    }
 }
