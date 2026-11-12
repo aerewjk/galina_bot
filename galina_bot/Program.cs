@@ -10,42 +10,37 @@ namespace galina_bot
     {
         static async Task Main(string[] args)
         {
-            var soundRecorder = new SoundRecording(); //Сервис записи звука
-            
-            //Скачивание модели, если ее нет
-            var voiceProcessing = new WhisperVoiceProcessing();
-            await voiceProcessing.InitializeModel();
+            var soundRecorder = new SoundRecording(); //Объект записи звука
+            var voiceProcessing = new WhisperVoiceProcessing(); //Объект обработки звука
 
-            
-            using (var keyboardHook = new KeyboardHook()) //Запуск хука
+            await voiceProcessing.InitializeModel();//Скачивание модели, если ее нет
+
+            using (var keyboardHook = new KeyboardHook()) //Запуск чтения хоткея
             {
-                keyboardHook.OnHotKeyPressed += () =>
+                keyboardHook.OnHotKeyPressed += () => //Если хоткей зажат
                 {
-                    soundRecorder.StartRecording();
+                    soundRecorder.StartRecording(); //Метод запуска записи
                 };
-
-                keyboardHook.OnHotKeyReleased += () =>
+                keyboardHook.OnHotKeyReleased += () => //Если хоткей отжат
                 {
-                    Task.Run(async () =>
+                    Task.Run(async () => // Запуск асинхронной задачи
                     {
-                        soundRecorder.StopRecordingAndProcess();
+                        soundRecorder.StopRecordingAndProcess(); //Метод остановки записи
 
-                        string filePath = soundRecorder.GetTempFilePath();
+                        string filePath = soundRecorder.GetTempFilePath(); // Передача пути звукового файла в метод
 
-                        string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath);
+                        string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath); //Передача файла в метод и получение распознавания
 
-                        Console.WriteLine(recognizedText);
+                        Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
                     });
                 };
 
-
-
-                Console.WriteLine("Хук установлен");
+                //Открытая инструкция для пользователя
                 Console.WriteLine("\r\n Галя приветствует вас");
                 Console.WriteLine("Для ввода команды зажмите Ctrl + Alt и зажмите - (Минус)");
                 Console.WriteLine("После произнесения команды отожмите - (минус)");
                 
-                Application.Run(); //Поддержание программы
+                Application.Run(); //Поддержание программы в запущенном состоянии
             }
         }
     }
