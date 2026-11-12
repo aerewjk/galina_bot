@@ -43,7 +43,7 @@ namespace galina_bot
                 Console.WriteLine("Хук установлен");
                 Console.WriteLine("\r\n Галя приветствует вас");
                 Console.WriteLine("Для ввода команды зажмите Ctrl + Alt и зажмите - (Минус)");
-                Console.WriteLine("После произнесения команды отожмите - (Минус)");
+                Console.WriteLine("После произнесения команды отожмите - (минус)");
                 
                 Application.Run(); //Поддержание программы
             }
