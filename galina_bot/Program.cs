@@ -2,29 +2,50 @@
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
-using static galina_bot.galina_hotkey;
+using static KeyboardHook;
+using static galina_bot.WhisperVoiceProcessing;
 namespace galina_bot
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Галя на связи!");
-            Console.WriteLine("Для того, чтобы запустить запись команды для Гали зажмите и произнесите команду с зажатым сочетанием клавиш crtl + alt + - (минус) ");
+            var soundRecorder = new SoundRecording(); //Сервис записи звука
+            
+            //Скачивание модели, если ее нет
+            var voiceProcessing = new WhisperVoiceProcessing();
+            await voiceProcessing.InitializeModel();
 
-            using (var hotKeyWindow = new HotKeyWindow())
+            
+            using (var keyboardHook = new KeyboardHook()) //Запуск хука
             {
-                if (!hotKeyWindow.Register())
+                keyboardHook.OnHotKeyPressed += () =>
                 {
-                    Console.WriteLine("> Невозможно зарегистрировать горячую клавишу");
-                    return;
-                }
+                    soundRecorder.StartRecording();
+                };
 
-                while (true)
+                keyboardHook.OnHotKeyReleased += () =>
                 {
-                    Application.DoEvents();
-                    Thread.Sleep(500);
-                }
+                    Task.Run(async () =>
+                    {
+                        soundRecorder.StopRecordingAndProcess();
+
+                        string filePath = soundRecorder.GetTempFilePath();
+
+                        string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath);
+
+                        Console.WriteLine(recognizedText);
+                    });
+                };
+
+
+
+                Console.WriteLine("Хук установлен");
+                Console.WriteLine("\r\n Галя приветствует вас");
+                Console.WriteLine("Для ввода команды зажмите Ctrl + Alt и зажмите - (Минус)");
+                Console.WriteLine("После произнесения команды отожмите - (минус)");
+                
+                Application.Run(); //Поддержание программы
             }
         }
     }
