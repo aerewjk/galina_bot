@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("galina_bot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d3cad17df03e4a925b2aa5174f8f0a637d3be04")]
 [assembly: System.Reflection.AssemblyProductAttribute("galina_bot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("galina_bot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

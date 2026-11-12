@@ -12,3 +12,4 @@ C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\refint
 C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.pdb
 C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.genruntimeconfig.cache
 C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\ref\galina_bot.dll
+C:\git_repos\galina_bot\galina_bot\galina_bot\obj\Debug\net9.0-windows8.0\galina_bot.sourcelink.json
