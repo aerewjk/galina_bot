@@ -1,15 +1,20 @@
-﻿using System;
+﻿using galina_bot.utils;
+using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Whisper.net;
 using Whisper.net.Ggml;
+
 namespace galina_bot.Classes.Voice
 {
     internal partial class WhisperVoiceProcessing
     {
-        const string modelFileName = "whisperVoiceModel.bin"; //Название файла, в котором хранится модель
+        static string modelFileName = "whisperVoiceModel.bin"; //Название файла, в котором хранится модель
+        static string choosed_model;
+        static string[] models = new string[] { "Tiny", "Base", "Small", "Medium", "LargeV3Turbo" };
 
         private WhisperFactory? _whisperFactory;
         private WhisperProcessor? _processor;
@@ -17,23 +22,31 @@ namespace galina_bot.Classes.Voice
         {
             if (!File.Exists(modelFileName)) //Если файл с моделью не обнаружен
             {
-                Console.WriteLine("Файл модели не был обнаружен. Скачивание модели Base, подождите, пожалуйста!");
-
-                Task<string> task = ModelDownloadAsync(); //Назначение таски
+                choosed_model = ChangeModel();
+                Task<string> task = ModelDownloadAsync(choosed_model); //Установка модели
                 string result_download = await task; //Запуск и ожидание
-                Console.WriteLine(result_download); //После завершения - вывод в консоль
+                Console.WriteLine($"\n{result_download}"); //После завершения - вывод в консоль
 
             }
             else { Console.WriteLine("Файл модели был обнаружен -> Скачивание не требуется"); }
-
-            _whisperFactory = WhisperFactory.FromPath(modelFileName);
-            _processor = _whisperFactory.CreateBuilder()
-                .WithLanguage("ru")
-                .Build();
+            try
+            {
+                _whisperFactory = WhisperFactory.FromPath(modelFileName);
+                _processor = _whisperFactory.CreateBuilder()
+                    .WithLanguage("ru")
+                    .Build();
+            }
+            catch (Whisper.net.WhisperModelLoadException) 
+            { 
+                Console.WriteLine("Файл модели поврежден. необходима переустановка");
+                File.Delete(modelFileName);
+                await InitializeModel();
+            }
         }
-        static async Task<string> ModelDownloadAsync() //Скачивание модели
+        static async Task<string> ModelDownloadAsync(string model_name) //Скачивание модели
         {
-            using var modelStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(GgmlType.Small); //Скачивает файл модели
+            GgmlType _model_name = Enum.Parse<GgmlType>(model_name, ignoreCase: true);
+            using var modelStream = await WhisperGgmlDownloader.Default.GetGgmlModelAsync(_model_name); //Скачивает файл модели
             using var fileWriter = File.Create(modelFileName); //Создает/перезаписывает файл согласно указанному названию
 
             // Пытаемся узнать общий размер (может быть null, если сервер не сообщил Content-Length)
@@ -78,5 +91,27 @@ namespace galina_bot.Classes.Voice
             }
             return "";
         }
+
+        static string ChangeModel() // Функция выбора модели для скачивания
+        {
+
+            Console.WriteLine("Файл модели не был обнаружен. Необходимо скачивание! \n Введите номер модели, которую хотите скачать и нажмите Enter. \n 1. Tiny \n 2. Base (recommended) \n 3. Small (recommended+) \n 4. medium \n 5. large-v3-turbo \n");
+            PrintModelTableClass.PrintModelTable(); // Фунция из утилиты, рисует красивую таблицу с характеристиками моделей
+
+            try
+            {
+                Console.Write("> ");
+                int numOfChoosed_model = Convert.ToInt16(Console.ReadLine()); // Пользователь вводит число
+                Console.WriteLine($"Была выбрана модель: {models[numOfChoosed_model - 1]}");
+                return models[numOfChoosed_model - 1]; //Метод возвращает строку с названием выбранной модели (ради обращения к массиву вычитали 1)
+            }
+            catch (Exception ex) //Выброс исключения для некорректного ввода
+            {
+                Console.WriteLine("Введите корректную цифру \n");
+                return ChangeModel(); //Метод повторно вызывает сам себя
+            }
+            
+        }
+
     }
 }
