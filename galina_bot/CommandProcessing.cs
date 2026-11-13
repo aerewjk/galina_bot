@@ -25,17 +25,17 @@ namespace galina_bot
         {
             string[] words = NormalizeText(inputText); // Создание массива, в котором будут храниться слова по отдельности
 
-            foreach (string word in words) //Проверка на слова из списка уникальных команд
+            foreach (string word in words) //Проверка каждого слова на наличие в словарях
             {
-                if (_uniqueKeyActions.TryGetValue(word, out Action? meaning))
+                if (_uniqueKeyActions.TryGetValue(word, out Action? meaning))//Проверяет на совпадение словарь с уникальными командами
                 {
-                    Console.WriteLine($"Обнаружена команда: {word} ");
-
-                    ExecuteCommand(word);
+                    Console.WriteLine($"Обнаружена команда: {word} "); //Индикация для консоли
+                    string commandType = "unique"; //Задается тип команды, который будет передан в метод. Он нужен, чтобы определить, из какого switch-case блока необходимо брать инструкцию
+                    ExecuteCommand(word, commandType); 
                 }
             }
         }
-        private string[] NormalizeText(string input)//Метод, убирает знаки препинания, ставит все в нижний регистр
+        private static string[] NormalizeText(string input)//Метод, убирает знаки препинания, ставит все в нижний регистр
         {
             if (input != null)
             {
@@ -45,6 +45,7 @@ namespace galina_bot
                 cleanText = cleanText.Replace("-", "");
                 cleanText = cleanText.Replace("?", "");
                 cleanText = cleanText.Replace("!", "");
+                cleanText = cleanText.Replace("*", "");
                 //cleanText = cleanText.Replace('"', "");
                 Console.WriteLine($"Очищенный текст: {cleanText}");
                 string[] phrase_words = cleanText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -52,12 +53,18 @@ namespace galina_bot
             }
             return Array.Empty<string>();
         } 
-        private void ExecuteCommand(string command_target)//Метод, выполняет команду
+        private void ExecuteCommand(string command_target, string commandType)//Метод, выполняет команду
         {
-            switch (command_target)
+            if (commandType == "unique")
             {
-                case "привет": { SystemSounds.Beep.Play(); break; }
+                switch (command_target)
+                {
+                    case "привет": { SystemSounds.Beep.Play(); break; }
+                }
             }
+            else
+            if (commandType == "open")
+            {  }
         } 
         
 
