@@ -8,11 +8,12 @@ namespace galina_bot
 {
     internal class CommandProcessing
     {
+        //TODO: Пусть будет три основных листа с задачами: 1. Задача -> исполнение, простые, нетиповые задачи, которые существуют в единственном экземпляре. Например "Привет". Сначала текст будет анализироваться на это, потом - на сложные фразы, которые будут храниться в формате глагол + объект
         private readonly List<string> _keyActions = new()
         { 
             "привет"
         };
-
+         
         private readonly Dictionary<string, string> _actions = new()
         {
             
