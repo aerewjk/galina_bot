@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using static KeyboardHook;
 using static galina_bot.WhisperVoiceProcessing;
+using static galina_bot.CommandProcessing;
 namespace galina_bot
 {
     internal class Program
@@ -12,7 +13,7 @@ namespace galina_bot
         {
             var soundRecorder = new SoundRecording(); //Объект записи звука
             var voiceProcessing = new WhisperVoiceProcessing(); //Объект обработки звука
-
+            var commandProcess = new CommandProcessing();
             await voiceProcessing.InitializeModel();//Скачивание модели, если ее нет
 
             using (var keyboardHook = new KeyboardHook()) //Запуск чтения хоткея
@@ -32,6 +33,7 @@ namespace galina_bot
                         string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath); //Передача файла в метод и получение распознавания
 
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
+                        Console.WriteLine($"Очищенный текст:{commandProcess.NormalizeText(recognizedText)}");
                     });
                 };
 
