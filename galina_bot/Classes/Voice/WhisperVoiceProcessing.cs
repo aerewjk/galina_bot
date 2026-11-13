@@ -13,8 +13,8 @@ namespace galina_bot.Classes.Voice
     internal partial class WhisperVoiceProcessing
     {
         static string modelFileName = "whisperVoiceModel.bin"; //Название файла, в котором хранится модель
-        static string choosed_model;
-        static string[] models = new string[] { "Tiny", "Base", "Small", "Medium", "LargeV3Turbo" };
+        static string? choosed_model;
+        static string[] models = ["Tiny", "Base", "Small", "Medium", "LargeV3Turbo"];
 
         private WhisperFactory? _whisperFactory;
         private WhisperProcessor? _processor;
@@ -56,7 +56,7 @@ namespace galina_bot.Classes.Voice
             long totalRead = 0;
             int bytesRead;
 
-            while ((bytesRead = await modelStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            while ((bytesRead = await modelStream.ReadAsync(buffer)) > 0)
             {
                 await fileWriter.WriteAsync(buffer, 0, bytesRead);
                 totalRead += bytesRead;
@@ -91,10 +91,8 @@ namespace galina_bot.Classes.Voice
             }
             return "";
         }
-
         static string ChangeModel() // Функция выбора модели для скачивания
         {
-
             Console.WriteLine("Файл модели не был обнаружен. Необходимо скачивание! \n Введите номер модели, которую хотите скачать и нажмите Enter. \n 1. Tiny \n 2. Base (recommended) \n 3. Small (recommended+) \n 4. medium \n 5. large-v3-turbo \n");
             PrintModelTableClass.PrintModelTable(); // Фунция из утилиты, рисует красивую таблицу с характеристиками моделей
 
@@ -105,7 +103,7 @@ namespace galina_bot.Classes.Voice
                 Console.WriteLine($"Была выбрана модель: {models[numOfChoosed_model - 1]}");
                 return models[numOfChoosed_model - 1]; //Метод возвращает строку с названием выбранной модели (ради обращения к массиву вычитали 1)
             }
-            catch (Exception ex) //Выброс исключения для некорректного ввода
+            catch (Exception) //Выброс исключения для некорректного ввода
             {
                 Console.WriteLine("Введите корректную цифру \n");
                 return ChangeModel(); //Метод повторно вызывает сам себя
