@@ -34,10 +34,9 @@ namespace galina_bot
                         string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath); //Передача файла в метод и получение распознавания
 
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
-                        Console.WriteLine($"Очищенный текст:{commandProcess.NormalizeText(recognizedText)}");
+                        Console.WriteLine("[{0}]", string.Join(";", commandProcess.NormalizeText(recognizedText)));
                     });
                 };
-                SystemSounds.Beep.Play();
                 //Открытая инструкция для пользователя
                 Console.WriteLine("\r\n Галя приветствует вас");
                 Console.WriteLine("Для ввода команды зажмите Ctrl + Alt и зажмите - (Минус)");
