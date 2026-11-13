@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading;
-using static KeyboardHook;
-using static galina_bot.WhisperVoiceProcessing;
+using System.Windows.Forms;
 using static galina_bot.CommandProcessing;
+using static galina_bot.WhisperVoiceProcessing;
+using static KeyboardHook;
 namespace galina_bot
 {
     internal class Program
@@ -26,7 +27,7 @@ namespace galina_bot
                 {
                     Task.Run(async () => // Запуск асинхронной задачи
                     {
-                        soundRecorder.StopRecordingAndProcess(); //Метод остановки записи
+                         soundRecorder.StopRecordingAndProcess(); //Метод остановки записи
 
                         string filePath = soundRecorder.GetTempFilePath(); // Передача пути звукового файла в метод
 
@@ -36,7 +37,7 @@ namespace galina_bot
                         Console.WriteLine($"Очищенный текст:{commandProcess.NormalizeText(recognizedText)}");
                     });
                 };
-
+                SystemSounds.Beep.Play();
                 //Открытая инструкция для пользователя
                 Console.WriteLine("\r\n Галя приветствует вас");
                 Console.WriteLine("Для ввода команды зажмите Ctrl + Alt и зажмите - (Минус)");

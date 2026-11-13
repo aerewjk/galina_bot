@@ -46,7 +46,9 @@ public class KeyboardHook : IDisposable
         using (Process curProcess = Process.GetCurrentProcess())
         using (ProcessModule? curModule = curProcess.MainModule)
         {
-            return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+            if (curModule != null)
+            { return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0); }
+            return 1;
         }
     }
 
@@ -64,13 +66,13 @@ public class KeyboardHook : IDisposable
 
                 if (isCtrlDown && isAltDown)
                 {
-                    if (wParam == (IntPtr)WM_KEYDOWN && _isRecording == false)
+                    if (wParam == (IntPtr)WM_KEYDOWN && _isRecording == false && OnHotKeyPressed != null)
                     {
                         Console.WriteLine("Начинаю запись");
                         _isRecording = true;
                         OnHotKeyPressed.Invoke();
                     }
-                    else if (wParam == (IntPtr)WM_KEYUP)
+                    else if (wParam == (IntPtr)WM_KEYUP && OnHotKeyReleased != null)
                     {
                         Console.WriteLine("Завершаю запись");
                         _isRecording = false;

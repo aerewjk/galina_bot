@@ -68,12 +68,15 @@ namespace galina_bot
         {
             using var fileStream = File.OpenRead(filePath);
             string fullText = "";
-
-            await foreach (var result in _processor.ProcessAsync(fileStream))
+            if (_processor != null)
             {
-                fullText += result.Text + " ";
+                await foreach (var result in _processor.ProcessAsync(fileStream))
+                {
+                    fullText += result.Text + " ";
+                }
+                return fullText.Trim();
             }
-            return fullText.Trim();
+            return "";
         }
     }
 }

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace galina_bot
 {
     internal class CommandProcessing
     {
         //TODO: Пусть будет три основных листа с задачами: 1. Задача -> исполнение, простые, нетиповые задачи, которые существуют в единственном экземпляре. Например "Привет". Сначала текст будет анализироваться на это, потом - на сложные фразы, которые будут храниться в формате глагол + объект
-        private readonly List<string> _keyActions = new()
-        { 
-            "привет"
+        private readonly Dictionary<string, Action> _uniqueKeyActions = new() // Список с уникальными нетиповыми задачами
+        {
+            { "привет", () => SystemSounds.Beep.Play() }
         };
          
         private readonly Dictionary<string, string> _actions = new()
@@ -34,6 +36,6 @@ namespace galina_bot
 
 
             return "Строка оказалась пустой";
-        }
+        } //Убирает знаки препинания, ставит все в нижний регистр
     }
 }

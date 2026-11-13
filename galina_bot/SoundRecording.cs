@@ -29,7 +29,7 @@ using Whisper.net;
         _recorder.StartRecording();
     }
 
-    public async Task StopRecordingAndProcess()
+    public void StopRecordingAndProcess()
     {
         if (_recorder != null)
         {
