@@ -1,10 +1,12 @@
-﻿using System;
+﻿using galina_bot.Classes.Commands;
+using galina_bot.Classes.Voice;
+using System;
 using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using static galina_bot.CommandProcessing;
-using static galina_bot.WhisperVoiceProcessing;
+using static galina_bot.Classes.Commands.CommandProcessing;
+using static galina_bot.Classes.Voice.WhisperVoiceProcessing;
 using static KeyboardHook;
 namespace galina_bot
 {

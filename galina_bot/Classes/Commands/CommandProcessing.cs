@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace galina_bot
+namespace galina_bot.Classes.Commands
 {
     internal class CommandProcessing
     {

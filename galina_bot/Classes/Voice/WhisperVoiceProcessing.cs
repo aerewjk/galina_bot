@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Whisper.net;
 using Whisper.net.Ggml;
-namespace galina_bot
+namespace galina_bot.Classes.Voice
 {
     internal partial class WhisperVoiceProcessing
     {
