@@ -23,9 +23,9 @@ namespace galina_bot
         };
         public void ProcessCommand(string inputText) //Главный метод. Обнаружает команду и загружает на выполнение
         {
-            string[] words = NormalizeText(inputText);
+            string[] words = NormalizeText(inputText); // Создание массива, в котором будут храниться слова по отдельности
 
-            foreach (string word in words)
+            foreach (string word in words) //Проверка на слова из списка уникальных команд
             {
                 if (_uniqueKeyActions.TryGetValue(word, out Action? meaning))
                 {
@@ -35,7 +35,7 @@ namespace galina_bot
                 }
             }
         }
-        private string[] NormalizeText(string input)
+        private string[] NormalizeText(string input)//Метод, убирает знаки препинания, ставит все в нижний регистр
         {
             if (input != null)
             {
@@ -45,18 +45,20 @@ namespace galina_bot
                 cleanText = cleanText.Replace("-", "");
                 cleanText = cleanText.Replace("?", "");
                 cleanText = cleanText.Replace("!", "");
+                //cleanText = cleanText.Replace('"', "");
+                Console.WriteLine($"Очищенный текст: {cleanText}");
                 string[] phrase_words = cleanText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 return phrase_words;
             }
             return Array.Empty<string>();
-        } //Метод, убирает знаки препинания, ставит все в нижний регистр
-        private void ExecuteCommand(string command_target)
+        } 
+        private void ExecuteCommand(string command_target)//Метод, выполняет команду
         {
             switch (command_target)
             {
                 case "привет": { SystemSounds.Beep.Play(); break; }
             }
-        } //Метод, выполняет команду
+        } 
         
 
     }
