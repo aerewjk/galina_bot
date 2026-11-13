@@ -34,7 +34,7 @@ namespace galina_bot
                         string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath); //Передача файла в метод и получение распознавания
 
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
-                        Console.WriteLine("[{0}]", string.Join(";", commandProcess.NormalizeText(recognizedText)));
+                        commandProcess.ProcessCommand(recognizedText);
                     });
                 };
                 //Открытая инструкция для пользователя

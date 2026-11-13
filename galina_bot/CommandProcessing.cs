@@ -21,8 +21,21 @@ namespace galina_bot
         {
             
         };
+        public void ProcessCommand(string inputText) //Главный метод. Обнаружает команду и загружает на выполнение
+        {
+            string[] words = NormalizeText(inputText);
 
-        public string[] NormalizeText(string input)
+            foreach (string word in words)
+            {
+                if (_uniqueKeyActions.TryGetValue(word, out Action? meaning))
+                {
+                    Console.WriteLine($"Обнаружена команда: {word} ");
+
+                    ExecuteCommand(word);
+                }
+            }
+        }
+        private string[] NormalizeText(string input)
         {
             if (input != null)
             {
@@ -36,8 +49,15 @@ namespace galina_bot
                 return phrase_words;
             }
             return Array.Empty<string>();
-        } //Убирает знаки препинания, ставит все в нижний регистр
-
+        } //Метод, убирает знаки препинания, ставит все в нижний регистр
+        private void ExecuteCommand(string command_target)
+        {
+            switch (command_target)
+            {
+                case "привет": { SystemSounds.Beep.Play(); break; }
+            }
+        } //Метод, выполняет команду
+        
 
     }
 }
