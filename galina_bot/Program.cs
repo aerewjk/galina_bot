@@ -34,7 +34,7 @@ namespace galina_bot
                         string filePath = soundRecorder.GetTempFilePath(); // Передача пути звукового файла в метод
 
                         string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath); //Передача файла в метод и получение распознавания
-
+                        File.Delete(filePath);
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
                         commandProcess.ProcessCommand(recognizedText);
                     });

@@ -7,7 +7,6 @@
 	      <UseWindowsForms>true</UseWindowsForms>	  
     <Nullable>enable</Nullable>
     <UseWindowsForms>True</UseWindowsForms>
-	
   </PropertyGroup>
 
   <ItemGroup>
