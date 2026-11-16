@@ -9,16 +9,9 @@ namespace galina_bot.Classes.Commands.Core
 {
     internal class CommandExecutor
     {
-        public void CommandExecute(Action? meaning)//Метод, выполняет команду
+        public void CommandExecute(Action meaning)//Метод, выполняет команду
         {
-            if (meaning == null)
-            {
-                Console.WriteLine("Команды не обнаружено");
-            }
-            else 
-            {
                 meaning();
-            }
         }
     }
 }

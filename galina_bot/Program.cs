@@ -4,7 +4,6 @@ using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using static galina_bot.utils.CommandProcessing;
 using static galina_bot.Classes.Voice.WhisperVoiceProcessing;
 using static KeyboardHook;
 using galina_bot.utils;
@@ -37,7 +36,9 @@ namespace galina_bot
                         string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath); //Передача файла в метод и получение распознавания
                         File.Delete(filePath);
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
-                        commandOrchestrator.CommandOrchestrate(recognizedText);
+
+                        bool lastCommandStatus = commandOrchestrator.CommandOrchestrate(recognizedText);
+                        if (lastCommandStatus) { Console.WriteLine("Команда обнаружене"); } else { Console.WriteLine("Команда не обнаружена"); }
                     });
                 };
                 //Открытая инструкция для пользователя

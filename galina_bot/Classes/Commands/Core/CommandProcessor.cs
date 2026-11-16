@@ -15,7 +15,6 @@ namespace galina_bot.Classes.Commands.Core
             {
                 if (uniqueKeyActions.TryGetValue(word, out Action? meaning))//Проверяет на совпадение словарь с уникальными командами
                 {
-                    Console.WriteLine($"Обнаружена команда: <{word}>. "); //Индикация для консоли
                     return meaning;
                 }
             }
