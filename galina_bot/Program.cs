@@ -1,13 +1,14 @@
-﻿using galina_bot.Classes.Commands;
-using galina_bot.Classes.Voice;
+﻿using galina_bot.Classes.Voice;
 using System;
 using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using static galina_bot.Classes.Commands.CommandProcessing;
+using static galina_bot.utils.CommandProcessing;
 using static galina_bot.Classes.Voice.WhisperVoiceProcessing;
 using static KeyboardHook;
+using galina_bot.utils;
+using galina_bot.Classes.Commands;
 namespace galina_bot
 {
     internal class Program
@@ -16,7 +17,7 @@ namespace galina_bot
         {
             var soundRecorder = new SoundRecording(); //Объект записи звука
             var voiceProcessing = new WhisperVoiceProcessing(); //Объект обработки звука
-            var commandProcess = new CommandProcessing();
+            var commandOrchestrator = new CommandOrchestrator();
             await voiceProcessing.InitializeModel();//Скачивание модели, если ее нет
 
             using (var keyboardHook = new KeyboardHook()) //Запуск чтения хоткея
@@ -36,7 +37,7 @@ namespace galina_bot
                         string recognizedText = await voiceProcessing.TranscribeAudioAsync(filePath); //Передача файла в метод и получение распознавания
                         File.Delete(filePath);
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
-                        commandProcess.ProcessCommand(recognizedText);
+                        commandOrchestrator.CommandOrchestrate(recognizedText);
                     });
                 };
                 //Открытая инструкция для пользователя
