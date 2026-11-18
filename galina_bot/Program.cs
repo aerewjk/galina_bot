@@ -1,10 +1,9 @@
-﻿using galina_bot.Classes.Voice;
-using System;
+﻿using System;
 using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using static galina_bot.Classes.Voice.WhisperVoiceProcessing;
+using static galina_bot.utils.WhisperVoiceProcessing;
 using static KeyboardHook;
 using galina_bot.utils;
 using galina_bot.Classes.Commands;
