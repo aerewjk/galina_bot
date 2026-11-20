@@ -7,6 +7,7 @@ using static KeyboardHook;
 using galina_bot.utils;
 using galina_bot.Classes.Commands;
 using galina_bot.Classes.Voice.WhisperModel;
+using Whisper.net;
 namespace galina_bot
 {
     internal class Program
@@ -18,7 +19,7 @@ namespace galina_bot
             var modelOrchestrator = new modelOrchestrator();
 
             await modelOrchestrator.ModelSetup();//Скачивание модели, если ее нет
-
+            
             using (var keyboardHook = new KeyboardHook()) //Запуск чтения хоткея
             {
                 keyboardHook.OnHotKeyPressed += () => //Если хоткей зажат
@@ -30,8 +31,9 @@ namespace galina_bot
                     Task.Run(async () => // Запуск асинхронной задачи
                     {
                          soundRecorder.StopRecordingAndProcess(); //Метод остановки записи
+
                         string recognizedText = await modelOrchestrator.ModelTranscrybe();
-                        
+                        Console.WriteLine("Пытаемся распознать!");
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
 
                         bool lastCommandStatus = commandOrchestrator.CommandOrchestrate(recognizedText);
