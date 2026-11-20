@@ -16,7 +16,6 @@ namespace galina_bot.Classes.Voice.WhisperModel.core
             {
                 await foreach (var result in _processor.ProcessAsync(fileStream))
                 {
-
                     fullText += result.Text + " ";
                 }
                 return fullText.Trim();

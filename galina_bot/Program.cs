@@ -16,7 +16,7 @@ namespace galina_bot
         {
             var soundRecorder = new SoundRecording(); //Объект записи звука
             var commandOrchestrator = new CommandOrchestrator();
-            var modelOrchestrator = new modelOrchestrator();
+            var modelOrchestrator = new ModelOrchestrator();
 
             await modelOrchestrator.ModelSetup();//Скачивание модели, если ее нет
             
