@@ -19,7 +19,7 @@ namespace galina_bot.Classes.Voice.WhisperModel.core
                     .Build();
                 return Task.FromResult(_processor);
             }
-            catch (WhisperModelLoadException)
+            catch (Exception)
             {
                 Console.WriteLine("Файл модели поврежден. необходима переустановка");
                 File.Delete(modelFileName);

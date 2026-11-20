@@ -19,7 +19,7 @@ namespace galina_bot.Classes.Voice.WhisperModel
         private ModelDownloading _modelDownloading;
         private TranscribeAudio _audioTranscribe;
         private SoundRecording _soundRecorder;
-        private WhisperProcessor? _processor = null; //Объявляем поле для processor, который необходим для транскрибирования звука
+        private WhisperProcessor? _processor; //Объявляем поле для processor, который необходим для транскрибирования звука
 
         //Константы для работы модуля
         static string[] models = ["Tiny", "Base", "Small", "Medium", "LargeV3Turbo"]; //Массив с названиями доступных моделей
@@ -56,9 +56,17 @@ namespace galina_bot.Classes.Voice.WhisperModel
         }
         private async Task ModelInit() //Создает и выплевывает в поле объект _processor
         {
-            _processor = await InitializeModelClass.InitializeModel(modelFileName);
+            try
+            {
+                _processor = await InitializeModelClass.InitializeModel(modelFileName);
+            }
+            catch (Exception) 
+            { 
+                Console.WriteLine("Файл модели поврежден");
+                File.Delete(modelFileName);
+                await ModelSetup();
+            }
         }
-
         public async Task<string> ModelTranscrybe() //Транскрибирует переданный голосовой файл в формате .wav
         {
             if (_processor != null)
