@@ -14,12 +14,13 @@ namespace galina_bot
     {
         static async Task Main(string[] args)
         {
+            //Создание объектов классов для работы
             var soundRecorder = new SoundRecording(); //Объект записи звука
-            var commandOrchestrator = new CommandOrchestrator();
-            var modelOrchestrator = new ModelOrchestrator();
+            var commandOrchestrator = new CommandOrchestrator(); //Оркестратор класса работы с Командами
+            var modelOrchestrator = new ModelOrchestrator(); //Оркестратор класса работы с Моделью
 
             await modelOrchestrator.ModelSetup();//Скачивание модели, если ее нет
-            
+
             using (var keyboardHook = new KeyboardHook()) //Запуск чтения хоткея
             {
                 keyboardHook.OnHotKeyPressed += () => //Если хоткей зажат
@@ -32,12 +33,13 @@ namespace galina_bot
                     {
                          soundRecorder.StopRecordingAndProcess(); //Метод остановки записи
 
-                        string recognizedText = await modelOrchestrator.ModelTranscrybe();
-                        Console.WriteLine("Пытаемся распознать!");
+                        string recognizedText = await modelOrchestrator.ModelTranscrybe(); //Получает распознанную строку
+
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
 
-                        bool lastCommandStatus = commandOrchestrator.CommandOrchestrate(recognizedText);
-                        if (lastCommandStatus) { Console.WriteLine("Команда обнаружена"); } else { Console.WriteLine("Команда не обнаружена"); }
+                        bool lastCommandStatus = commandOrchestrator.CommandOrchestrate(recognizedText); //Сохраняет статус команды (Найдена/не найдена)
+
+                        if (lastCommandStatus) { Console.WriteLine("Команда обнаружена"); } else { Console.WriteLine("Команда не обнаружена"); } //Выводит результат поиска
                     });
                 };
                 //Открытая инструкция для пользователя
