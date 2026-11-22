@@ -11,7 +11,7 @@ using Whisper.net;
         private WaveFileWriter? _writer;
         private string _tempFilePath = "temp_voice.wav";
 
-        public void StartRecording()
+        public void StartRecording() //Запись звука
     {
         //Создание рекордера с указанием нужного формата записи
         _recorder = new WasapiRecorderBuilder()
@@ -28,8 +28,7 @@ using Whisper.net;
 
         _recorder.StartRecording();
     }
-
-    public void StopRecordingAndProcess()
+    public void StopRecordingAndProcess() //Остановка записи и передача файла
     {
         if (_recorder != null)
         {
@@ -46,7 +45,6 @@ using Whisper.net;
 
         Console.WriteLine("Запись завершена, отправка в Whisper.");
     }
-
     public string GetTempFilePath() => _tempFilePath;
 }
 

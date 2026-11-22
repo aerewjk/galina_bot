@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Text;
+
 using System.Threading.Tasks;
 
 namespace galina_bot.Classes.Commands.Dictionaries
@@ -11,7 +12,8 @@ namespace galina_bot.Classes.Commands.Dictionaries
     {
         public static readonly Dictionary<string, Action> uniqueKeyActions = new() // Список с уникальными нетиповыми задачами
         {
-            { "привет", () => SystemSounds.Beep.Play() }
+            { "привет", () => SystemSounds.Beep.Play() },
+            { "галя", () => SystemSounds.Hand.Play() }
         };
     }
 }
