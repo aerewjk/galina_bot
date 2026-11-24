@@ -32,9 +32,9 @@ using Whisper.net;
     {
         if (_recorder != null)
         {
-            _recorder.StopRecording();
-            _recorder.Dispose();
-            _recorder = null;
+            _recorder.StopRecording(); //Остановка записи
+            _recorder.Dispose(); //Убиваем процесс
+            _recorder = null; //Обнуляем процесс
         }
 
         if (_writer != null)
