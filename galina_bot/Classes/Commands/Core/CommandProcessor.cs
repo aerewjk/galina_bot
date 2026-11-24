@@ -9,16 +9,17 @@ namespace galina_bot.Classes.Commands.Core
 {
     internal class CommandProcessor
     {
-        public Action? CommandProcess(string[] words) //Главный метод. Обнаружает команду и загружает на выполнение
+        public List<Action<string[]>>? CommandProcess(string[] words) //Главный метод. Обнаружает команду и загружает на выполнение
         {
+            List<Action<string[]>> foundActions = new List<Action<string[]>>();
             foreach (string word in words) //Проверка каждого слова на наличие в словарях
             {
-                if (uniqueKeyActions.TryGetValue(word, out Action? meaning))//Проверяет на совпадение словарь с уникальными командами
+                if (uniqueKeyActions.TryGetValue(word, out Action<string[]>? meaning))//Проверяет на совпадение словарь с уникальными командами
                 {
-                    return meaning;
+                    foundActions.Add(meaning);
                 }
             }
-            return null;
+            return foundActions;
         }
     }
 }

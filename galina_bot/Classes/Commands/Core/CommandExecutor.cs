@@ -9,9 +9,9 @@ namespace galina_bot.Classes.Commands.Core
 {
     internal class CommandExecutor
     {
-        public void CommandExecute(Action meaning)//Метод, выполняет команду
+        public void CommandExecute(Action<string[]> meaning, string[] words)//Метод, выполняет команду
         {
-                meaning();
+                meaning(words);
         }
     }
 }

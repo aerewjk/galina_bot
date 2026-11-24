@@ -17,11 +17,14 @@ namespace galina_bot.Classes.Commands
         {
             string[] recognizedWords = parser.CommandParse(recognizedText);
 
-            Action? selectedAction = processor.CommandProcess(recognizedWords);
+            List<Action<string[]>>? selectedAction = processor.CommandProcess(recognizedWords);
 
             if (selectedAction != null)
             {
-                executor.CommandExecute(selectedAction);
+                foreach (var spelledCommand in selectedAction)
+                {
+                    executor.CommandExecute(spelledCommand, recognizedWords);
+                }
                 return true;
             } 
             else 
