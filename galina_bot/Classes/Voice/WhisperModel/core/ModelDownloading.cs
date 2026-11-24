@@ -39,7 +39,7 @@ namespace galina_bot.Classes.Voice.WhisperModel.core
                     Console.Write($"\rСкачано: {mbRead:0.00} MB   ");
                 }
             }
-
+            await Task.Delay(1000);
             Console.WriteLine(); //Перевод строки после завершения
             return true;
         }

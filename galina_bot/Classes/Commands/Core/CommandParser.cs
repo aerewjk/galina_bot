@@ -21,6 +21,7 @@ namespace galina_bot.Classes.Commands.Core
                 cleanText = cleanText.Replace("*", "");
                 cleanText = cleanText.Replace("[", "");
                 cleanText = cleanText.Replace("]", "");
+                cleanText = cleanText.Replace("мне", "");
 
                 string[] phrase_words = cleanText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 return phrase_words;
