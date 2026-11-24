@@ -9,7 +9,7 @@ namespace galina_bot.Classes.Commands.Dictionaries
 {
     internal class CommandActions
     {
-        public static void searchInBrowser(string[] words)
+        public static void searchInBrowser(string[] words) //Функция поиска в интернете
         {
             int index = Array.IndexOf(words, "найди");
             var queryWords = words.Skip(index + 1);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace galina_bot.Classes.Commands.Dictionaries
 {
-    public class EasyCommandsDictionary
+    public class CommandsDictionary
     {
         public static readonly Dictionary<string, Action<string[]>> uniqueKeyActions = new() // Список с уникальными нетиповыми задачами
         {
