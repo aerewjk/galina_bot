@@ -37,9 +37,8 @@ namespace galina_bot
 
                         Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
 
-                        bool lastCommandStatus = commandOrchestrator.CommandOrchestrate(recognizedText); //Сохраняет статус команды (Найдена/не найдена)
+                        commandOrchestrator.CommandOrchestrate(recognizedText); //Исполняет команды, которые найдет в тексте
 
-                        if (lastCommandStatus) { Console.WriteLine("Команда обнаружена"); } else { Console.WriteLine("Команда не обнаружена"); } //Выводит результат поиска
                     });
                 };
                 //Открытая инструкция для пользователя
