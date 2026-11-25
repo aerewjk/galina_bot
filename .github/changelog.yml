@@ -1,0 +1,32 @@
+name: Update Changelog
+
+on:
+  push:
+    tags:
+      - 'v*' # Запускать только при пуше тегов, начинающихся с v (например, v1.0.0)
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Важно! Дает права на коммит изменений в репозиторий
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Критически важно! git-cliff нужна вся история коммитов
+
+      - name: Generate Changelog
+        uses: orhun/git-cliff-action@v3
+        with:
+          config: cliff.toml
+          args: --verbose
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update CHANGELOG.md for ${{ github.ref_name }}"
+          file_pattern: CHANGELOG.md
