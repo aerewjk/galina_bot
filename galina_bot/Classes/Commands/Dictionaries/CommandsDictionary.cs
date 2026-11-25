@@ -14,7 +14,8 @@ namespace galina_bot.Classes.Commands.Dictionaries
         {
             { "привет", (args) => SystemSounds.Beep.Play() },
             { "галя", (args) => SystemSounds.Hand.Play() },
-            {"найди", CommandActions.searchInBrowser}
+            {"найди", CommandActions.searchInBrowser},
+            {"таймер", CommandActions.setTimer}
         };
     }
 }
