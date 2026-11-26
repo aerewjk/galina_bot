@@ -11,6 +11,7 @@
 - Изменен release.yml - он совмещен с changelog.yml, удален changelog.yml
 - Доработан release.yaml, теперь он исправно собирает проект и автоматически публикует релиз на github
 - Добавление файла release.yml для автоматизации публикации релизов на гитхаб
+- Изменен release.yml - он совмещен с changelog.yml, удален changelog.yml
 ## [1.1.0] - 2026-11-26
 
 ### Features
