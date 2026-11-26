@@ -12,8 +12,11 @@ namespace galina_bot
 {
     internal class Program
     {
+        private static readonly SemaphoreSlim _processingLock = new SemaphoreSlim(1, 1);
         static async Task Main(string[] args)
         {
+            bool flag_IsRecording = false;
+
             //Создание объектов классов для работы
             var soundRecorder = new SoundRecording(); //Объект записи звука
             var commandOrchestrator = new CommandOrchestrator(); //Оркестратор класса работы с Командами
@@ -25,21 +28,33 @@ namespace galina_bot
             {
                 keyboardHook.OnHotKeyPressed += () => //Если хоткей зажат
                 {
-                    soundRecorder.StartRecording(); //Метод запуска записи
+                    if (flag_IsRecording != true)
+                    {
+                        soundRecorder.StartRecording(); //Метод запуска записи
+                        flag_IsRecording = true;
+                        Console.WriteLine($"Мы в StartRecording. Состояние флага {flag_IsRecording}");
+                    }
                 };
                 keyboardHook.OnHotKeyReleased += () => //Если хоткей отжат
                 {
                     Task.Run(async () => // Запуск асинхронной задачи
                     {
-                         soundRecorder.StopRecordingAndProcess(); //Метод остановки записи
+                        await _processingLock.WaitAsync();
 
-                        string recognizedText = await modelOrchestrator.ModelTranscrybe(); //Получает распознанную строку
+                        try
+                        {
+                            soundRecorder.StopRecordingAndProcess(); //Метод остановки записи
 
-                        Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
+                            string recognizedText = await modelOrchestrator.ModelTranscrybe(); //Получает распознанную строку
 
-                        commandOrchestrator.CommandOrchestrate(recognizedText); //Исполняет команды, которые найдет в тексте
+                            Console.WriteLine(recognizedText); //Передача распознанного текста в консоль
 
-                    });
+                            await commandOrchestrator.CommandOrchestrate(recognizedText); //Исполняет команды, которые найдет в тексте
+                        }
+                        finally { _processingLock.Release(); flag_IsRecording = false; }
+
+                            Console.WriteLine($"Мы в StopRecording. Состояние флага {flag_IsRecording}");
+                        });
                 };
                 //Открытая инструкция для пользователя
                 Console.WriteLine("\r\n Галя приветствует вас");

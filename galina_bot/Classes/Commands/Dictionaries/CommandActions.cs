@@ -1,11 +1,12 @@
-﻿using System;
+﻿using galina_bot.Classes.Commands.TimeCommands;
+using galina_bot.Classes.Commands.TimerUtils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
-using galina_bot.Classes.Commands.TimeCommands;
-using galina_bot.Classes.Commands.TimerUtils;
 namespace galina_bot.Classes.Commands.Dictionaries
 {
     internal class CommandActions
@@ -24,22 +25,20 @@ namespace galina_bot.Classes.Commands.Dictionaries
             });
 
         }
-        public static void setTimer(string[] words)
+        public static void setTimer(string[] words) //Функция Таймера
         {
-            int index = Array.IndexOf(words, "на");
-            var queryWords = words.Skip(index + 1);
-            string timerWords = string.Join(" ", queryWords);
-            Console.WriteLine(timerWords);
+            int index = Array.IndexOf(words, "на"); 
+            var queryWords = words.Skip(index + 1); //Удаляет все слова после "на". т.е. "поставь таймер на 15 минут" -> "15 минут"
+            string timerWords = string.Join(" ", queryWords); //Склеивает массив в строку, которая дальше и обрабатывается
 
-            string timeExpression = timeParserClass.timeParse(timerWords);
-            Console.WriteLine($"получили такое уравнение:{timeExpression}");
+            string timeExpression = timeParserClass.timeParse(timerWords); //Парсит время, превращает ввод в уравнение, результат которого = секунды
 
-            int computedTime = timeComputer.timeCompute(timeExpression);
-            Console.WriteLine($"Нужен таймер на:{computedTime} секунд");
+            int computedTime = timeComputer.timeCompute(timeExpression); //Решает то самое строковое уравнение
 
-            if (computedTime > 0)
+            if (computedTime > 0) //computedTime = 0, если в прошлом методе произошла ошибка, так что если >0, значит все отработало нормально, и таймер можно запускать
             {
-                TimerClass.setTimer(computedTime);
+                TimerClass.setTimer(computedTime); //Запуск таймера
+                SystemSounds.Asterisk.Play();
             }
 
         }

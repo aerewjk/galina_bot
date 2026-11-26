@@ -13,7 +13,7 @@ namespace galina_bot.Classes.Commands
             processor = new CommandProcessor();
             executor = new CommandExecutor();
         }
-        public bool CommandOrchestrate(string recognizedText)
+        public async Task<bool> CommandOrchestrate(string recognizedText)
         {
             string[] recognizedWords = parser.CommandParse(recognizedText);
 
