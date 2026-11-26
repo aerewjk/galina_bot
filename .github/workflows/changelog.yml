@@ -9,7 +9,7 @@ jobs:
   changelog:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Важно! Дает права на коммит изменений в репозиторий
+      contents: write # Дает права на коммит изменений в репозиторий
 
     steps:
       - name: Checkout code
@@ -17,13 +17,16 @@ jobs:
         with:
           fetch-depth: 0 # Критически важно! git-cliff нужна вся история коммитов
 
+      - name: Install Rust and git-cliff
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          cargo install git-cliff
+
       - name: Generate Changelog
-        uses: orhun/git-cliff-action@v3
-        with:
-          config: cliff.toml
-          args: --verbose
-        env:
-          OUTPUT: CHANGELOG.md
+        run: |
+          # Запускаем git-cliff с нашим конфигом и сохраняем в CHANGELOG.md
+          git-cliff --config cliff.toml --verbose -o CHANGELOG.md
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
