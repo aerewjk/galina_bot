@@ -1,0 +1,59 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Запускается при пуше тегов, начинающихся с v (например, v1.1.2)
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest # Обязательно Windows, так как проект использует WinForms
+    permissions:
+      contents: write # Дает права на создание релиза и прикрепление файлов
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Важно для корректной работы с историей
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x' # Укажи свою версию .NET, если она отличается (например, 6.0.x или 7.0.x)
+
+      - name: Publish Project
+        # Собираем проект: Release, под Windows x64, self-contained (со встроенным .NET), в один файл
+        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
+
+      - name: Zip Artifact
+        # Упаковываем всё, что лежит в папке publish, в архив
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./galinaBot_${{ github.ref_name }}.zip
+
+      - name: Extract Changelog Section
+        id: changelog
+        shell: bash
+        run: |
+          # Берем имя тега (например, v1.1.2)
+          VERSION="${{ github.ref_name }}"
+          
+          # Вырезаем текст из CHANGELOG.md от заголовка с нашей версией до следующего '## ['
+          # Если в CHANGELOG заголовки без буквы 'v' (например, ## [1.1.2]), 
+          # то мы убираем 'v' из VERSION с помощью ${VERSION#v}
+          awk -v ver="${VERSION#v}" '
+            index($0, "## [" ver "]") == 1 { flag=1; next }
+            flag && /^## \[/ { exit }
+            flag { print }
+          ' CHANGELOG.md > release_notes.md
+          
+          # Проверка на всякий случай: если файл пустой, выведем предупреждение
+          if [ ! -s release_notes.md ]; then
+            echo "⚠️ Секция для версии $VERSION не найдена в CHANGELOG.md"
+          fi
+
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          body_path: release_notes.md # <-- Автоматически вставляет вырезанный текст
+          files: ./galinaBot_${{ github.ref_name }}.zip # <-- Прикрепляет твой архив
