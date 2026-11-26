@@ -54,7 +54,7 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Publish Project
-        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
+        run: dotnet publish -c Release -r win-x64 --self-contained true -o ./publish
 
       - name: Zip Artifact
         run: Compress-Archive -Path ./publish/* -DestinationPath ./galinaBot_${{ github.ref_name }}.zip

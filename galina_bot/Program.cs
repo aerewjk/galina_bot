@@ -32,7 +32,6 @@ namespace galina_bot
                     {
                         soundRecorder.StartRecording(); //Метод запуска записи
                         flag_IsRecording = true;
-                        Console.WriteLine($"Мы в StartRecording. Состояние флага {flag_IsRecording}");
                     }
                 };
                 keyboardHook.OnHotKeyReleased += () => //Если хоткей отжат
@@ -52,8 +51,6 @@ namespace galina_bot
                             await commandOrchestrator.CommandOrchestrate(recognizedText); //Исполняет команды, которые найдет в тексте
                         }
                         finally { _processingLock.Release(); flag_IsRecording = false; }
-
-                            Console.WriteLine($"Мы в StopRecording. Состояние флага {flag_IsRecording}");
                         });
                 };
                 //Открытая инструкция для пользователя
