@@ -3,19 +3,20 @@ name: Update Changelog
 on:
   push:
     tags:
-      - 'v*' # Запускать только при пуше тегов, начинающихся с v (например, v1.0.0)
+      - 'v*'
 
 jobs:
   changelog:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Дает права на коммит изменений в репозиторий
+      contents: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Критически важно! git-cliff нужна вся история коммитов
+          fetch-depth: 0
+          ref: main # <--- Добавили это, чтобы робот сразу клонировал ветку main
 
       - name: Install Rust and git-cliff
         run: |
@@ -25,7 +26,6 @@ jobs:
 
       - name: Generate Changelog
         run: |
-          # Запускаем git-cliff с нашим конфигом и сохраняем в CHANGELOG.md
           git-cliff --config cliff.toml --verbose -o CHANGELOG.md
 
       - name: Commit and Push changes
@@ -33,3 +33,4 @@ jobs:
         with:
           commit_message: "chore: update CHANGELOG.md for ${{ github.ref_name }}"
           file_pattern: CHANGELOG.md
+          branch: main # <--- Явно говорим, куда пушить
