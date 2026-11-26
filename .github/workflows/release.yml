@@ -51,11 +51,18 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x' # <--- ИЗМЕНЕНО НА 9.0.x
+          dotnet-version: '9.0.x'
 
       - name: Publish Project
-        # Сборка в один файл с извлечением нативных библиотек
-        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish
+        # Собираем как Framework-dependent (--self-contained false)
+        # Это оставит только exe, pdb и папку runtimes
+        run: dotnet publish -c Release -r win-x64 --self-contained false -o ./publish
+
+      - name: Cleanup Runtimes
+        # Удаляем лишние архитектуры, чтобы не тащить их в архив
+        run: |
+          Remove-Item -Path "./publish/runtimes/win-arm64" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "./publish/runtimes/win-x86" -Recurse -Force -ErrorAction SilentlyContinue
 
       - name: Zip Artifact
         run: Compress-Archive -Path ./publish/* -DestinationPath ./galinaBot_${{ github.ref_name }}.zip
