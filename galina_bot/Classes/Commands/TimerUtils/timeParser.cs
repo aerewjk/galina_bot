@@ -18,6 +18,7 @@ namespace galina_bot.Classes.Commands.TimeCommands
             TimePhrase = Regex.Replace(TimePhrase,@"секунд\w*", "* 1 +");
             TimePhrase = Regex.Replace(TimePhrase, @"минут\w*", "* 60 +");
             TimePhrase = Regex.Replace(TimePhrase, @"час\w*", "* 3600 +");
+
             TimePhrase = TimePhrase.Replace("и", "");
             TimePhrase = TimePhrase.Replace(" ", "");
             TimePhrase = TimePhrase.TrimEnd('+');

@@ -13,7 +13,7 @@ namespace galina_bot.Classes.Commands.TimeCommands
             try
             {
                 var expression = new Expression(timeExpression);
-                object result = expression.Evaluate();
+                object? result = expression.Evaluate();
                 int intResult = Convert.ToInt32(result);
                 return intResult;
             } catch (Exception) { Console.WriteLine("Возникла непредвиденная ошибка"); return 0; }

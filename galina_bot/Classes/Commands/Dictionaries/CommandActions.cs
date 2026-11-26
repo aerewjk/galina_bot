@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using galina_bot.Classes.Commands.TimeCommands;
-
+using galina_bot.Classes.Commands.TimerUtils;
 namespace galina_bot.Classes.Commands.Dictionaries
 {
     internal class CommandActions
@@ -35,8 +35,12 @@ namespace galina_bot.Classes.Commands.Dictionaries
             Console.WriteLine($"получили такое уравнение:{timeExpression}");
 
             int computedTime = timeComputer.timeCompute(timeExpression);
-            Console.WriteLine($"Нужен таймер на:{computedTime} секунды");
+            Console.WriteLine($"Нужен таймер на:{computedTime} секунд");
 
+            if (computedTime > 0)
+            {
+                TimerClass.setTimer(computedTime);
+            }
 
         }
     }
